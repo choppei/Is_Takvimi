@@ -1,0 +1,12 @@
+<% try { %>
+<%- include('partials/header', {user: [firstName, lastName]}) %>
+<%} catch(error) { %>
+<%- include('partials/header')%>
+<%} %>
+<form action="/apps/<%=appName%>/delete" method="post">
+    <h1>Silmek istediğine emin misin? <%=appName%></h1>
+    <h4>Tüm etkinlikler de silinecek....</h4>
+    <a href="/"> <button type="button" class="btn btn-secondary">İptal</button></a>
+    <button type="submit" class="btn btn-danger">Sil</button>
+</form>
+<%- include('partials/footer') %>

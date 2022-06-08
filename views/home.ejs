@@ -1,0 +1,78 @@
+
+<% try { %>
+  <%- include('partials/header', {user: [firstName, lastName]}) %>
+<%} catch(error) { %>
+  <%- include('partials/header')%>
+<%} %>
+
+
+
+
+<main role="main">
+  <div id="logout-div" style="display:none;" class="answer_list" ></div>
+  <div id="modal" style="display:none;" class="answer_list">
+    <h1 class="popup">Çıkış yapmak istediğinizden emin misiniz??</h1>
+    <a href="/"><button type="button" class="btn btn-light">Hayır</button></a>
+    <a href="/logout"><button type="button" class="btn btn-secondary">Çıkış</button></a>
+
+  </div>
+  
+
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading test">TRT Genel Sekreterlik İş Takvimi</h1>
+      <p class="lead text-muted">Bu proje, Node.js üzerinde Express.js ile oluşturulmuştur.
+        MongoDB veritabanı uygulandı. Salt ve Hash dahil Pasaport Kimlik Doğrulaması kullanıldı.
+        </p>
+      <p>Ekranda gösterilen tüm veriler örnek verilerdir. Kişisel programlar/etkinlikler oluşturmak için lütfen giriş yapın/kaydolun</p>
+      <p>
+        <a href="https://berkkucukoglu.wordpress.com/hakkinda/" class="btn btn-secondary my-2">BerkKucukoglu</a>
+        <a href="https://www.linkedin.com/in/berk-k%C3%BC%C3%A7%C3%BCko%C4%9Flu-66973b130/" class="btn btn-primary my-2">LinkedIn</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <% foundApps.forEach(function(item) { %>
+        <div class="col-md-4">
+          <div class="card mb-4 box-shadow">
+
+            <div class="card-body btn">
+              <h2><%=item.name %></h2>
+              <p class="card-text"><%= item.hint %> </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="/apps/<%= item.name %>">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Gir</button>
+                  </a>
+                </div>
+                <small class="text-muted"></small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+        <div class="col-md-4">
+          <a href="/add_item" style="text-decoration: none;">
+            <div class="card mb-4 box-shadow">
+              <button type="button" class="btn btn-light">
+                <div class="card-body add-card">
+                  <h1>Proje Ekle..</h1>
+                </div>
+              </button>
+
+            </div>
+          </a>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+</main>
+
+<%- include('partials/footer') %>
