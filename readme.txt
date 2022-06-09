@@ -1,1 +1,1 @@
-Bu bir iş projesidir.
+Bu bir kurum projesidir.
