@@ -137,7 +137,7 @@ app.post("/register", function (req, res) {
     userCollection.register({
         username: req.body.username
     }, req.body.password, function (err, user) {
-        
+
         if (err) {
             console.log(err);
             res.redirect("/register");
@@ -196,49 +196,51 @@ app.post("/add_item", function (req, res) {
     }
 });
 
-app.get("/apps/:appName", function (req, res) {
+app.get("/apps/:appName", async function (req, res) {
 
 
     if (req.isAuthenticated()) {
         appCollection.find({
             userID: req.user.id,
             name: req.params.appName
-        }, function (err, foundApp) { //should be single app for "foundApp"
-           
+        },
+            function (err, foundApp) { //should be single app for "foundApp"
 
-            eventCollection.find({
-                appID: foundApp[0]._id.valueOf()
-            }, function (err, foundItems) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    var eventsToAdd = [];
-                    foundItems.forEach(item => {
-                        eventsToAdd.push({
-                            title: item.eventName,
-                            start: item.startTime,
-                            end: item.endTime,
-                            url: "/apps/" + req.params.appName + "/" + item._id + "/event"
-                        })
-                    });
-                    
-                    res.render("schedule", {
-                        date: myDate.getCurrentDate(),
-                        appTitle: req.params.appName,
-                        firstName: req.user.firstName,
-                        lastName: req.user.lastName,
-                        foundEvents: eventsToAdd
-                    });
-                }
-            });
-        })
+          
+                var appid = foundApp[0]?._id.valueOf();
+                eventCollection.find({
+                    appID: appid
+                }, function (err, foundItems) {
+                    try {
+                        var eventsToAdd = [];
+                        foundItems.forEach(item => {
+                            eventsToAdd.push({
+                                title: item.eventName,
+                                start: item.startTime,
+                                end: item.endTime,
+                                url: "/apps/" + req.params.appName + "/" + item._id + "/event"
+                            })
+                        });
+
+                        res.render("schedule", {
+                            date: myDate.getCurrentDate(),
+                            appTitle: req.params.appName,
+                            firstName: req.user.firstName,
+                            lastName: req.user.lastName,
+                            foundEvents: eventsToAdd
+                        });
+                    } catch (error) {
+                        console.log(error)
+                    }
+                });
+            })
     } else {
         appCollection.find({
             userID: "622fed8b6bde50cfdb3ad7ad",
             name: req.params.appName
         }, function (err, foundApp) { //should be single app for "foundApp"
-            
-
+            console.log(foundApp[0])
+            return
             eventCollection.find({
                 appID: foundApp[0]._id.valueOf()
             }, function (err, foundItems) {
@@ -254,7 +256,7 @@ app.get("/apps/:appName", function (req, res) {
                             url: "/apps/" + req.params.appName + "/" + item._id + "/event"
                         })
                     });
-                    
+
                     res.render("schedule", {
                         date: myDate.getCurrentDate(),
                         appTitle: req.params.appName,
@@ -273,7 +275,7 @@ app.get("/apps/:appName/:eventId/event", function (req, res) {
             userID: req.user.id,
             name: req.params.appName
         }, function (err, foundApp) { //should be single app for "foundApp"
-            
+
             eventCollection.find({
                 _id: req.params.eventId
             }, function (err, foundItems) {
@@ -294,7 +296,7 @@ app.get("/apps/:appName/:eventId/event", function (req, res) {
             userID: "622fed8b6bde50cfdb3ad7ad",
             name: req.params.appName
         }, function (err, foundApp) { //should be single app for "foundApp"
-            
+
             eventCollection.find({
                 _id: req.params.eventId
             }, function (err, foundItems) {
@@ -318,7 +320,7 @@ app.get("/apps/:appName/events/", function (req, res) {
             userID: req.user.id,
             name: req.params.appName
         }, function (err, foundApp) { //should be single app for "foundApp"
-            
+
             eventCollection.find({
                 appID: foundApp[0]._id.valueOf()
             }, function (err, foundItems) {
@@ -339,7 +341,7 @@ app.get("/apps/:appName/events/", function (req, res) {
             userID: "622fed8b6bde50cfdb3ad7ad",
             name: req.params.appName
         }, function (err, foundApp) { //should be single app for "foundApp"
-            
+
             eventCollection.find({
                 appID: foundApp[0]._id.valueOf()
             }, function (err, foundItems) {
@@ -462,31 +464,31 @@ app.post("/update/:eventId", function (req, res) {
         } else {
             res.redirect(req.params.eventId + "/event_edit")
         }
-       
+
     }
 })
 
-app.get("/apps/:appName/delete", function(req, res){
+app.get("/apps/:appName/delete", function (req, res) {
     res.render("app-delete", {
         appName: req.params.appName
 
     })
 })
-app.post("/apps/:appName/delete", function(req, res){
-    if(req.isAuthenticated()){        
-        appCollection.deleteOne({name: req.params.appName, userID: req.user.id}, function(err, result){
+app.post("/apps/:appName/delete", function (req, res) {
+    if (req.isAuthenticated()) {
+        appCollection.deleteOne({ name: req.params.appName, userID: req.user.id }, function (err, result) {
             if (err) {
                 res.send(err);
-              } else {
+            } else {
                 res.redirect("/");
-              }
+            }
         });
     } else {
         res.redirect("/register")
     }
-    
 
-    
+
+
 })
 
 app.listen(3000, function () {
