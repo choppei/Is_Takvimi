@@ -240,9 +240,9 @@ app.get("/apps/:appName", async function (req, res) {
             name: req.params.appName
         }, function (err, foundApp) { //should be single app for "foundApp"
             console.log(foundApp[0])
-            return
+            
             eventCollection.find({
-                appID: foundApp[0]._id.valueOf()
+                appID: foundApp[0]?._id.valueOf()
             }, function (err, foundItems) {
                 if (err) {
                     console.log(err);
