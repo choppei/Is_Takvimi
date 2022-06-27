@@ -239,8 +239,6 @@ app.get("/apps/:appName", async function (req, res) {
             userID: "622fed8b6bde50cfdb3ad7ad",
             name: req.params.appName
         }, function (err, foundApp) { //should be single app for "foundApp"
-            console.log(foundApp[0])
-            
             eventCollection.find({
                 appID: foundApp[0]?._id.valueOf()
             }, function (err, foundItems) {
